@@ -1,0 +1,15 @@
+{
+  "name": "ingreso-certeza-poc",
+  "version": "1.0.0",
+  "description": "Arquitectura de referencia y prototipo funcional para App IngresoCerteza: gestión multi-ramo de referidos de seguros, venta cruzada, motor de comisiones, alertas WhatsApp Cloud API y KPIs comerciales.",
+  "type": "module",
+  "author": "Julián Sánchez <julsanchezc@unal.edu.co> (https://github.com/Julsanchezc)",
+  "license": "MIT",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "demo": "node scripts/serve-demo.mjs"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
