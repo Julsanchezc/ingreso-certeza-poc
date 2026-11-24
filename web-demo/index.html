@@ -1,0 +1,590 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f8fafc" />
+    <title>IngresoCerteza — Gestión de Prospectos, Ventas Cruzadas y Comisiones</title>
+    <link rel="stylesheet" href="/web-demo/styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-workspace">Saltar al espacio operativo</a>
+
+    <header class="topbar no-print">
+      <div class="topbar-inner">
+        <div class="brand-block">
+          <span class="brand-mark" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              <path d="m9 12 2 2 4-4" />
+            </svg>
+          </span>
+          <div class="brand-copy">
+            <h1 class="brand-title" translate="no">IngresoCerteza</h1>
+            <p class="brand-subtitle">Trazabilidad comercial multi-ramo y liquidación transparente de comisiones</p>
+          </div>
+        </div>
+
+        <nav class="role-tabs" aria-label="Vistas operativas por rol">
+          <div class="tablist" role="tablist" aria-label="Cambiar rol operativo">
+            <button
+              type="button"
+              role="tab"
+              id="tab-btn-prospectador"
+              class="tab-trigger is-active"
+              aria-selected="true"
+              aria-controls="panel-prospectador"
+              data-tab="prospectador"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
+                <line x1="12" y1="18" x2="12.01" y2="18" />
+              </svg>
+              <span>App Prospectador</span>
+            </button>
+
+            <button
+              type="button"
+              role="tab"
+              id="tab-btn-vendedor"
+              class="tab-trigger"
+              aria-selected="false"
+              aria-controls="panel-vendedor"
+              data-tab="vendedor"
+              tabindex="-1"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <polyline points="16 11 18 13 22 9" />
+              </svg>
+              <span>App Vendedor</span>
+            </button>
+
+            <button
+              type="button"
+              role="tab"
+              id="tab-btn-admin"
+              class="tab-trigger"
+              aria-selected="false"
+              aria-controls="panel-admin"
+              data-tab="admin"
+              tabindex="-1"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <rect x="3" y="3" width="7" height="7" rx="1" />
+                <rect x="14" y="3" width="7" height="7" rx="1" />
+                <rect x="14" y="14" width="7" height="7" rx="1" />
+                <rect x="3" y="14" width="7" height="7" rx="1" />
+              </svg>
+              <span>Panel Administrador</span>
+            </button>
+          </div>
+        </nav>
+
+        <div class="topbar-actions">
+          <button type="button" id="btn-reset-demo" class="btn btn-ghost" title="Restaurar los datos iniciales de demostración">
+            Restablecer datos
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <section class="print-only-header" aria-hidden="true">
+      <h2 class="print-title">IngresoCerteza — Reporte Ejecutivo de Dirección Comercial</h2>
+      <p id="print-meta-summary" class="print-subtitle"></p>
+    </section>
+
+    <div id="global-toast" class="toast-banner no-print" role="status" aria-live="polite" hidden></div>
+
+    <main id="main-workspace" class="workspace">
+      <!-- ===================================================================
+           VISTA 1: APP MÓVIL — PROSPECTADOR (REFERIDOR)
+           =================================================================== -->
+      <section
+        id="panel-prospectador"
+        class="view-panel"
+        role="tabpanel"
+        aria-labelledby="tab-btn-prospectador"
+      >
+        <div class="context-bar">
+          <div class="context-selector-group">
+            <label for="select-referrer" class="field-label">Sesión móvil del prospectador (aislamiento RBAC)</label>
+            <div class="context-inline">
+              <select id="select-referrer" name="activeReferrer" class="select-control"></select>
+              <span id="referrer-rbac-badge" class="pill pill-neutral"></span>
+            </div>
+          </div>
+
+          <div class="context-actions">
+            <button type="button" id="btn-weekly-digest" class="btn btn-secondary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+              </svg>
+              <span>Simular Resumen Semanal WhatsApp</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="referrer-wallet-cards" class="kpi-grid kpi-grid-3" aria-label="Billetera de comisiones del prospectador"></div>
+
+        <div class="card rates-strip-card">
+          <div class="rates-strip-header">
+            <h2 class="section-subtitle">Esquema vigente de comisiones para tu cuenta</h2>
+            <span class="muted-note">Los convenios preferentes sustituyen automáticamente la tarifa base del ramo.</span>
+          </div>
+          <div id="referrer-rates-strip" class="rates-pills-wrap"></div>
+        </div>
+
+        <section id="weekly-digest-panel" class="card digest-simulation-card" aria-labelledby="digest-heading" hidden>
+          <div class="card-header-row">
+            <div>
+              <h2 id="digest-heading" class="card-title">Simulación de Corte Semanal Automatizado (WhatsApp Cloud API)</h2>
+              <p class="card-description">Plantilla HSM <code translate="no">resumen_semanal_comisiones</code> compilada en vivo sobre tu cartera actual.</p>
+            </div>
+            <div class="inline-buttons">
+              <button type="button" id="btn-copy-digest-json" class="btn btn-ghost btn-sm">Copiar JSON</button>
+              <button type="button" id="btn-close-digest" class="btn btn-ghost btn-sm" aria-label="Cerrar simulación de resumen semanal">Cerrar</button>
+            </div>
+          </div>
+          <div id="weekly-digest-body" class="digest-split-grid"></div>
+        </section>
+
+        <div class="prospectador-layout">
+          <!-- Alta de nuevo referido -->
+          <section class="card mobile-frame-card" aria-labelledby="heading-new-prospect">
+            <div class="mobile-frame-notch" aria-hidden="true">
+              <span class="device-tag">App Móvil · Alta Rápida</span>
+            </div>
+            <h2 id="heading-new-prospect" class="card-title">Registrar Nuevo Prospecto</h2>
+            <p class="card-description">Tu autoría queda sellada en el expediente y protege tus comisiones futuras en ventas cruzadas.</p>
+
+            <form id="form-new-prospect" class="stack-form" novalidate>
+              <div class="form-field">
+                <label for="input-prospect-name" class="field-label">Nombre completo del prospecto</label>
+                <input
+                  type="text"
+                  id="input-prospect-name"
+                  name="fullName"
+                  class="input-control"
+                  autocomplete="off"
+                  placeholder="Ej. Alejandra Morales Ríos…"
+                  required
+                />
+              </div>
+
+              <div class="form-row-2">
+                <div class="form-field">
+                  <label for="select-prospect-cc" class="field-label">País base</label>
+                  <select id="select-prospect-cc" name="defaultCountryCode" class="select-control">
+                    <option value="52">México (+52)</option>
+                    <option value="57">Colombia (+57)</option>
+                  </select>
+                </div>
+
+                <div class="form-field">
+                  <label for="input-prospect-phone" class="field-label">Teléfono WhatsApp</label>
+                  <input
+                    type="tel"
+                    id="input-prospect-phone"
+                    name="phone"
+                    class="input-control tabular"
+                    inputmode="tel"
+                    autocomplete="off"
+                    placeholder="Ej. 55 4123 9876…"
+                    required
+                  />
+                </div>
+              </div>
+              <p id="phone-e164-hint" class="field-hint" aria-live="polite">Formato destino Meta Cloud API: pendiente de captura.</p>
+
+              <div class="form-row-2">
+                <div class="form-field">
+                  <label for="input-prospect-email" class="field-label">Correo electrónico (opcional)</label>
+                  <input
+                    type="email"
+                    id="input-prospect-email"
+                    name="email"
+                    class="input-control"
+                    autocomplete="off"
+                    spellcheck="false"
+                    placeholder="cliente@dominio.mx…"
+                  />
+                </div>
+
+                <div class="form-field">
+                  <label for="select-prospect-agent" class="field-label">Agente cerrador asignado</label>
+                  <select id="select-prospect-agent" name="assignedAgentId" class="select-control"></select>
+                </div>
+              </div>
+
+              <fieldset class="form-fieldset">
+                <legend class="field-label">Ramos aseguradores de interés inicial (selección múltiple)</legend>
+                <div id="prospect-branches-list" class="branch-checkbox-grid"></div>
+              </fieldset>
+
+              <div class="form-field">
+                <label for="input-prospect-notes" class="field-label">Contexto para el vendedor (opcional)</label>
+                <textarea
+                  id="input-prospect-notes"
+                  name="notes"
+                  rows="2"
+                  class="textarea-control"
+                  placeholder="Ej. Busca deducibilidad fiscal o renovación próxima…"
+                ></textarea>
+              </div>
+
+              <label class="checkbox-card" for="input-prospect-privacy">
+                <input type="checkbox" id="input-prospect-privacy" name="privacyNoticeAccepted" />
+                <span>
+                  Confirmo que el prospecto fue informado y otorgó consentimiento conforme al
+                  <strong>Aviso de Privacidad Integral (LFPDPPP)</strong> para ser contactado con fines de cotización aseguradora.
+                </span>
+              </label>
+
+              <div id="prospect-form-error" class="inline-error" role="alert" hidden></div>
+
+              <button type="submit" class="btn btn-primary btn-block">Registrar prospecto y abrir expediente</button>
+            </form>
+          </section>
+
+          <!-- Embudo de mis referidos -->
+          <section class="funnel-column" aria-labelledby="heading-referrer-funnel">
+            <div class="section-header-inline">
+              <div>
+                <h2 id="heading-referrer-funnel" class="section-title">Embudo en Vivo de Mis Referidos</h2>
+                <p class="section-caption">Seguimiento transparente en 7 etapas comerciales y trazabilidad de ventas cruzadas.</p>
+              </div>
+              <span id="referrer-funnel-count" class="pill pill-blue tabular"></span>
+            </div>
+
+            <div id="referrer-dossiers-list" class="dossiers-stack"></div>
+          </section>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           VISTA 2: APP MÓVIL — VENDEDOR (AGENTE DE SEGUROS)
+           =================================================================== -->
+      <section
+        id="panel-vendedor"
+        class="view-panel"
+        role="tabpanel"
+        aria-labelledby="tab-btn-vendedor"
+        hidden
+      >
+        <div class="context-bar">
+          <div class="context-selector-group">
+            <label for="select-agent" class="field-label">Sesión móvil del agente de seguros</label>
+            <div class="context-inline">
+              <select id="select-agent" name="activeAgent" class="select-control"></select>
+              <span id="agent-workload-badge" class="pill pill-neutral tabular"></span>
+            </div>
+          </div>
+
+          <div class="context-selector-group">
+            <label for="select-agent-stage-filter" class="field-label">Filtrar cartera por etapa</label>
+            <select id="select-agent-stage-filter" name="stageFilter" class="select-control"></select>
+          </div>
+        </div>
+
+        <div class="vendedor-layout">
+          <!-- Lista interactiva de expedientes del vendedor -->
+          <section class="vendedor-dossiers-col" aria-labelledby="heading-agent-portfolio">
+            <div class="section-header-inline">
+              <div>
+                <h2 id="heading-agent-portfolio" class="section-title">Expedientes Asignados y Máquina de 7 Etapas</h2>
+                <p class="section-caption">Actualiza etapas, registra primas reales o expande pólizas mediante venta cruzada protegiendo al referidor original.</p>
+              </div>
+            </div>
+
+            <div id="agent-dossiers-list" class="dossiers-stack"></div>
+          </section>
+
+          <!-- Inspector lateral en vivo: Transactional Outbox -->
+          <aside class="outbox-sidebar" aria-labelledby="heading-outbox-inspector">
+            <div class="card outbox-card">
+              <div class="card-header-row">
+                <div>
+                  <h2 id="heading-outbox-inspector" class="card-title">Inspector Transactional Outbox</h2>
+                  <p class="card-description">Despacho dual WhatsApp Cloud API + Push móvil al avanzar etapas.</p>
+                </div>
+                <span id="outbox-count-badge" class="pill pill-emerald tabular">0 eventos</span>
+              </div>
+
+              <div class="form-field">
+                <label for="select-outbox-event" class="field-label">Evento despachado a inspeccionar</label>
+                <select id="select-outbox-event" class="select-control"></select>
+              </div>
+
+              <div id="outbox-live-content" class="outbox-stack"></div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           VISTA 3: PANEL ADMINISTRATIVO WEB (ADMINISTRADOR)
+           =================================================================== -->
+      <section
+        id="panel-admin"
+        class="view-panel"
+        role="tabpanel"
+        aria-labelledby="tab-btn-admin"
+        hidden
+      >
+        <div class="card admin-toolbar-card no-print">
+          <form id="form-admin-filters" class="admin-filters-bar" novalidate>
+            <div class="form-field">
+              <label for="filter-agent" class="field-label">Vendedor asignado</label>
+              <select id="filter-agent" name="agentId" class="select-control"></select>
+            </div>
+
+            <div class="form-field">
+              <label for="filter-referrer" class="field-label">Prospectador origen</label>
+              <select id="filter-referrer" name="referrerId" class="select-control"></select>
+            </div>
+
+            <div class="form-field">
+              <label for="filter-start-date" class="field-label">Fecha inicial (alta)</label>
+              <input type="date" id="filter-start-date" name="startDate" class="input-control tabular" />
+            </div>
+
+            <div class="form-field">
+              <label for="filter-end-date" class="field-label">Fecha final (alta)</label>
+              <input type="date" id="filter-end-date" name="endDate" class="input-control tabular" />
+            </div>
+
+            <div class="filter-actions-cell">
+              <button type="button" id="btn-clear-filters" class="btn btn-ghost">Limpiar filtros</button>
+            </div>
+          </form>
+
+          <div class="admin-export-bar">
+            <span id="admin-active-filter-caption" class="muted-note">Mostrando universo completo de operaciones.</span>
+            <div class="inline-buttons">
+              <button type="button" id="btn-export-csv" class="btn btn-secondary">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                <span>Exportar CSV / Excel</span>
+              </button>
+
+              <button type="button" id="btn-export-pdf" class="btn btn-primary">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <polyline points="6 9 6 2 18 2 18 9" />
+                  <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+                  <rect x="6" y="14" width="12" height="8" />
+                </svg>
+                <span>Imprimir / Exportar PDF</span>
+              </button>
+            </div>
+          </div>
+
+          <div id="admin-filter-error" class="inline-error" role="alert" hidden></div>
+        </div>
+
+        <!-- KPIs Ejecutivos -->
+        <div id="admin-kpi-cards" class="kpi-grid kpi-grid-4" aria-label="Indicadores clave de dirección"></div>
+
+        <!-- Desglose de Estancamiento -->
+        <section class="card stagnation-section" aria-labelledby="heading-stagnation">
+          <div class="card-header-row">
+            <div>
+              <h2 id="heading-stagnation" class="card-title">Diagnóstico de Estancamiento en el Embudo Activo</h2>
+              <p class="card-description">Partición exacta de oportunidades abiertas según la fase donde se detuvo el seguimiento comercial.</p>
+            </div>
+            <span id="stagnation-total-pill" class="pill pill-amber tabular"></span>
+          </div>
+          <div id="admin-stagnation-grid" class="stagnation-grid"></div>
+        </section>
+
+        <!-- Tablas Analíticas -->
+        <div class="admin-tables-grid">
+          <section class="card table-card" aria-labelledby="heading-branch-perf">
+            <div class="card-header-row">
+              <div>
+                <h2 id="heading-branch-perf" class="card-title">Desempeño por Ramo Asegurador</h2>
+                <p class="card-description">Conversión efectiva y volumen de prima anual pagada por línea de producto.</p>
+              </div>
+            </div>
+            <div class="table-scroll">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Ramo / Producto</th>
+                    <th scope="col" class="num-col">Comisión base</th>
+                    <th scope="col" class="num-col">Oportunidades</th>
+                    <th scope="col" class="num-col">Pagadas</th>
+                    <th scope="col" class="num-col">Conversión</th>
+                    <th scope="col" class="num-col">Prima cerrada</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-branch-performance"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="card table-card" aria-labelledby="heading-referrer-ranking">
+            <div class="card-header-row">
+              <div>
+                <h2 id="heading-referrer-ranking" class="card-title">Ranking de Prospectadores</h2>
+                <p class="card-description">Ordenado por comisiones confirmadas listas para cobro y eficiencia de conversión.</p>
+              </div>
+            </div>
+            <div class="table-scroll">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Prospectador</th>
+                    <th scope="col" class="num-col">Expedientes</th>
+                    <th scope="col" class="num-col">Pólizas</th>
+                    <th scope="col" class="num-col">Conversión</th>
+                    <th scope="col" class="num-col">Lista cobro</th>
+                    <th scope="col" class="num-col">En cotización</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-referrer-ranking"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+
+        <!-- Gobernanza de Comisiones y Alta de Ramos -->
+        <div class="admin-governance-grid no-print">
+          <section class="card" aria-labelledby="heading-commission-rules">
+            <h2 id="heading-commission-rules" class="card-title">Gestor de Comisiones por Prospectador y Ramo</h2>
+            <p class="card-description">Configura convenios diferenciados por aliado; recalcula al instante las oportunidades abiertas en curso.</p>
+
+            <form id="form-commission-rule" class="stack-form compact-form" novalidate>
+              <div class="form-row-3">
+                <div class="form-field">
+                  <label for="rule-referrer" class="field-label">Prospectador</label>
+                  <select id="rule-referrer" name="referrerId" class="select-control" required></select>
+                </div>
+
+                <div class="form-field">
+                  <label for="rule-branch" class="field-label">Ramo asegurador</label>
+                  <select id="rule-branch" name="branchCode" class="select-control" required></select>
+                </div>
+
+                <div class="form-field">
+                  <label for="rule-rate" class="field-label">Comisión pactada (%)</label>
+                  <input
+                    type="number"
+                    id="rule-rate"
+                    name="ratePercent"
+                    class="input-control tabular"
+                    min="0.1"
+                    max="100"
+                    step="0.1"
+                    placeholder="Ej. 17.5…"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="form-row-action">
+                <div class="form-field grow-field">
+                  <label for="rule-note" class="field-label">Justificación o convenio comercial</label>
+                  <input
+                    type="text"
+                    id="rule-note"
+                    name="note"
+                    class="input-control"
+                    autocomplete="off"
+                    placeholder="Ej. Nivel oro por volumen trimestral…"
+                  />
+                </div>
+                <button type="submit" class="btn btn-primary">Guardar porcentaje</button>
+              </div>
+
+              <div id="rule-form-error" class="inline-error" role="alert" hidden></div>
+            </form>
+
+            <div class="table-scroll rules-table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Prospectador</th>
+                    <th scope="col">Ramo</th>
+                    <th scope="col" class="num-col">Base</th>
+                    <th scope="col" class="num-col">Pactada</th>
+                    <th scope="col">Convenio</th>
+                    <th scope="col" class="num-col">Acción</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-custom-rules"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="card" aria-labelledby="heading-new-branch">
+            <h2 id="heading-new-branch" class="card-title">Agregar Nuevo Producto / Ramo Asegurador</h2>
+            <p class="card-description">Expande el catálogo sin tocar código fuente; se habilita de inmediato en prospección y venta cruzada.</p>
+
+            <form id="form-new-branch" class="stack-form compact-form" novalidate>
+              <div class="form-row-2">
+                <div class="form-field">
+                  <label for="branch-code" class="field-label">Código técnico (A-Z, 0-9, _)</label>
+                  <input
+                    type="text"
+                    id="branch-code"
+                    name="code"
+                    class="input-control"
+                    autocomplete="off"
+                    spellcheck="false"
+                    placeholder="Ej. CYBER_PYME…"
+                    required
+                  />
+                </div>
+
+                <div class="form-field">
+                  <label for="branch-rate" class="field-label">Comisión base general (%)</label>
+                  <input
+                    type="number"
+                    id="branch-rate"
+                    name="defaultCommissionRate"
+                    class="input-control tabular"
+                    min="0.1"
+                    max="100"
+                    step="0.1"
+                    placeholder="Ej. 13.5…"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="form-row-action">
+                <div class="form-field grow-field">
+                  <label for="branch-name" class="field-label">Nombre comercial del producto</label>
+                  <input
+                    type="text"
+                    id="branch-name"
+                    name="name"
+                    class="input-control"
+                    autocomplete="off"
+                    placeholder="Ej. Seguro de Riesgos Cibernéticos PyME…"
+                    required
+                  />
+                </div>
+                <button type="submit" class="btn btn-secondary">Registrar ramo</button>
+              </div>
+
+              <div id="branch-form-error" class="inline-error" role="alert" hidden></div>
+            </form>
+
+            <div class="catalog-list-header">
+              <h3 class="section-subtitle">Catálogo activo en plataforma</h3>
+            </div>
+            <div id="admin-branches-catalog" class="catalog-pills-grid"></div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="/web-demo/app.mjs"></script>
+  </body>
+</html>
