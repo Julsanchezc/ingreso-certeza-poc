@@ -4,7 +4,7 @@
 
 Prototipo de ingeniería y validación de reglas de negocio para **App IngresoCerteza**: plataforma móvil multiplataforma (iOS y Android) con panel administrativo web orientada a gestionar redes de prospectadores de seguros, venta cruzada multi-ramo, liquidación auditable de comisiones y notificaciones automáticas por **Meta WhatsApp Cloud API** y **Push (FCM/APNs)**.
 
-Autor: **Julián Sánchez** ([github.com/Julsanchezc](https://github.com/Julsanchezc) · `julsanchezc@unal.edu.co`).
+Autor: **Julián Sánchez** ([github.com/Julsanchezc](https://github.com/Julsanchezc) · `julsanchezc@unal.edu.co`) · **[Simulador Interactivo en Vivo (GitHub Pages)](https://julsanchezc.github.io/ingreso-certeza-poc/)**
 
 ---
 
