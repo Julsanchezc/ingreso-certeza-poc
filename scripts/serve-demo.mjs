@@ -32,7 +32,13 @@ createServer(async (req, res) => {
     return;
   }
 
-  const relativePath = decodedPath === '/' ? '/web-demo/index.html' : decodedPath;
+  if (decodedPath === '/') {
+    res.writeHead(302, { Location: '/web-demo/index.html' });
+    res.end();
+    return;
+  }
+
+  const relativePath = decodedPath;
 
   // Bloquea acceso a carpetas/archivos ocultos (.git, .env, .github)
   const segments = relativePath.split(/[\\/]+/).filter(Boolean);
